@@ -108,6 +108,40 @@ class HomeScreen extends StatelessWidget {
             height: 8,
           ),
           mostPopularMoviesList(),
+          //new movie
+          const SizedBox(
+            height: 8,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(
+                width: 10,
+              ),
+              Text(
+                'new_movie'.tr,
+                style: Get.textTheme.subtitle2!.apply(
+                  color: AppColors.white,
+                ),
+              ),
+              const Expanded(child: SizedBox()),
+              TextButton(
+                onPressed: () {},
+                child: Text(
+                  'see_all'.tr,
+                  style: Get.textTheme.headline2!.apply(
+                    color: AppColors.white.withAlpha(150),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              )
+            ],
+          ),
+          const SizedBox(
+            height: 8,
+          ),
         ],
       ),
     );
@@ -118,12 +152,16 @@ class HomeScreen extends StatelessWidget {
       height: Get.height / 2.7,
       child: Obx(
         () => ListView.builder(
+          physics: const BouncingScrollPhysics(),
           scrollDirection: Axis.horizontal,
-          itemCount: mainController.mostPopularMovieList.length,
+          itemCount: mainController.mostPopularMovieList.length < 10
+              ? mainController.mostPopularMovieList.length
+              : 10,
           itemBuilder: ((context, index) {
             return Padding(
               padding: const EdgeInsets.only(left: 10),
               child: Container(
+                clipBehavior: Clip.hardEdge,
                 width: Get.width / 2.3,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
@@ -139,9 +177,9 @@ class HomeScreen extends StatelessWidget {
                           imageUrl:
                               mainController.mostPopularMovieList[index].image!,
                           imageBuilder: (context, imageProvider) => Image(
-                            image: imageProvider,
-                            fit: BoxFit.fill,
-                          ),
+                              image: imageProvider,
+                              width: Get.width / 2.3,
+                              fit: BoxFit.fill),
                           placeholder: (context, url) => loading(),
                           errorWidget: (context, url, error) => const Icon(
                             Icons.image_not_supported_outlined,
@@ -164,16 +202,31 @@ class HomeScreen extends StatelessWidget {
                                 color: AppColors.white.withAlpha(155),
                               ),
                             ),
-                            Text(
-                              mainController
-                                  .mostPopularMovieList[index].imDbRatingCount!,
-                              style: Get.textTheme.headline2!.apply(
-                                color: AppColors.white.withAlpha(155),
-                              ),
+                            Row(
+                              children: [
+                                Text(
+                                  mainController.mostPopularMovieList[index]
+                                      .imDbRatingCount!,
+                                  style: Get.textTheme.headline2!.apply(
+                                    color: AppColors.white.withAlpha(155),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                Icon(
+                                  Icons.remove_red_eye_outlined,
+                                  color: AppColors.white.withAlpha(155),
+                                ),
+                              ],
                             ),
                             RatingBarIndicator(
-                              rating: double.parse(mainController
-                                  .mostPopularMovieList[index].imDbRating!),
+                              rating: mainController.mostPopularMovieList[index]
+                                          .imDbRating! ==
+                                      ""
+                                  ? 0.0
+                                  : double.parse(mainController
+                                      .mostPopularMovieList[index].imDbRating!),
                               itemBuilder: (context, index) => const Icon(
                                 Icons.star_rate_rounded,
                                 color: Colors.amber,

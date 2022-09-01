@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:app_movie_by_imdb_api/models/cooming_soon_model.dart';
 import 'package:app_movie_by_imdb_api/models/most_popular_movie_model.dart';
 import 'package:app_movie_by_imdb_api/services/api_constan.dart';
 import 'package:app_movie_by_imdb_api/services/dio_service.dart';
@@ -12,6 +13,7 @@ class MainController extends GetxController {
 
   //list
   RxList<MostPopularMovieModel> mostPopularMovieList = RxList();
+  RxList<ComingSoonModel> comingSoonMoviesList = RxList();
 
   //controller
 
@@ -21,15 +23,37 @@ class MainController extends GetxController {
   @override
   onInit() {
     super.onInit();
-    getMostPopularMovies();
+    getMostPopular();
+    getComingSoon();
   }
 
-  getMostPopularMovies() async {
-    var response =
+  getMostPopular() async {
+    var responseMostPopular =
         await DioService().getMethod(ApiConstan.getMostPopularMovies);
-    if (response.statusCode == 200) {
-      response.data['items'].forEach((element) {
+
+    var responseComingSoon =
+        await DioService().getMethod(ApiConstan.getMostPopularMovies);
+
+    if (responseMostPopular.statusCode == 200) {
+      responseMostPopular.data['items'].forEach((element) {
         mostPopularMovieList.add(MostPopularMovieModel.fromJson(element));
+      });
+    }
+
+    if (responseComingSoon.statusCode == 200) {
+      responseComingSoon.data['items'].forEach((element) {
+        mostPopularMovieList.add(MostPopularMovieModel.fromJson(element));
+      });
+    }
+  }
+
+  getComingSoon() async {
+    var responseComingSoon =
+        await DioService().getMethod(ApiConstan.getMostPopularMovies);
+
+    if (responseComingSoon.statusCode == 200) {
+      responseComingSoon.data['items'].forEach((element) {
+        comingSoonMoviesList.add(ComingSoonModel.fromJson(element));
       });
     }
   }
