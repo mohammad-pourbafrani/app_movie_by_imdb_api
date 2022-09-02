@@ -7,7 +7,7 @@ class Languages extends Translations {
           'search': 'Search',
           'most_popular': 'most popular Movies',
           'see_all': 'See All',
-          'new_movie': 'New Movies',
+          'coming_soon': 'Coming Soon',
         },
       };
 }

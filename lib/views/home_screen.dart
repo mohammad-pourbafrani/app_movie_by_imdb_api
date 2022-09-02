@@ -119,7 +119,7 @@ class HomeScreen extends StatelessWidget {
                 width: 10,
               ),
               Text(
-                'new_movie'.tr,
+                'coming_soon'.tr,
                 style: Get.textTheme.subtitle2!.apply(
                   color: AppColors.white,
                 ),
@@ -142,6 +142,10 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(
             height: 8,
           ),
+          comingSoonMoviesList(),
+          const SizedBox(
+            height: 90,
+          ),
         ],
       ),
     );
@@ -151,100 +155,193 @@ class HomeScreen extends StatelessWidget {
     return SizedBox(
       height: Get.height / 2.7,
       child: Obx(
-        () => ListView.builder(
-          physics: const BouncingScrollPhysics(),
-          scrollDirection: Axis.horizontal,
-          itemCount: mainController.mostPopularMovieList.length < 10
-              ? mainController.mostPopularMovieList.length
-              : 10,
-          itemBuilder: ((context, index) {
-            return Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                clipBehavior: Clip.hardEdge,
-                width: Get.width / 2.3,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: AppColors.backgrandNavColor,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Center(
-                        child: CachedNetworkImage(
-                          imageUrl:
-                              mainController.mostPopularMovieList[index].image!,
-                          imageBuilder: (context, imageProvider) => Image(
-                              image: imageProvider,
-                              width: Get.width / 2.3,
-                              fit: BoxFit.fill),
-                          placeholder: (context, url) => loading(),
-                          errorWidget: (context, url, error) => const Icon(
-                            Icons.image_not_supported_outlined,
-                            color: AppColors.imageNotFoundColor,
-                            size: 50,
+        () => mainController.loadingMostPopular.value
+            ? loading()
+            : ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemCount: mainController.mostPopularMovieList.length < 10
+                    ? mainController.mostPopularMovieList.length
+                    : 10,
+                itemBuilder: ((context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Container(
+                      clipBehavior: Clip.hardEdge,
+                      width: Get.width / 2.3,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: AppColors.backgrandNavColor,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Center(
+                              child: CachedNetworkImage(
+                                imageUrl: mainController
+                                    .mostPopularMovieList[index].image!,
+                                imageBuilder: (context, imageProvider) => Image(
+                                    image: imageProvider,
+                                    width: Get.width / 2.3,
+                                    fit: BoxFit.fill),
+                                placeholder: (context, url) => loading(),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(
+                                  Icons.image_not_supported_outlined,
+                                  color: AppColors.imageNotFoundColor,
+                                  size: 50,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    mainController
+                                        .mostPopularMovieList[index].title!,
+                                    style: Get.textTheme.headline2!.apply(
+                                      color: AppColors.white.withAlpha(155),
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        mainController
+                                            .mostPopularMovieList[index]
+                                            .imDbRatingCount!,
+                                        style: Get.textTheme.headline2!.apply(
+                                          color: AppColors.white.withAlpha(155),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 8,
+                                      ),
+                                      Icon(
+                                        Icons.remove_red_eye_outlined,
+                                        color: AppColors.white.withAlpha(155),
+                                      ),
+                                    ],
+                                  ),
+                                  RatingBarIndicator(
+                                    rating: mainController
+                                                .mostPopularMovieList[index]
+                                                .imDbRating! ==
+                                            ""
+                                        ? 0.0
+                                        : double.parse(mainController
+                                            .mostPopularMovieList[index]
+                                            .imDbRating!),
+                                    itemBuilder: (context, index) => const Icon(
+                                      Icons.star_rate_rounded,
+                                      color: Colors.amber,
+                                    ),
+                                    itemCount: 10,
+                                    itemSize: 16.0,
+                                    direction: Axis.horizontal,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              ),
+      ),
+    );
+  }
+
+  Widget comingSoonMoviesList() {
+    return SizedBox(
+      height: Get.height / 4,
+      child: Obx(
+        () => mainController.loadingComingSoon.value
+            ? loading()
+            : ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemCount: mainController.comingSoonMoviesList.length < 10
+                    ? mainController.comingSoonMoviesList.length
+                    : 10,
+                itemBuilder: ((context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Stack(
+                      children: [
+                        Container(
+                          clipBehavior: Clip.hardEdge,
+                          width: Get.width / 1.5,
+                          height: Get.height / 4,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          foregroundDecoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            gradient: const LinearGradient(
+                                colors:
+                                    GradianetAppColors.gradianetComingSoonItem,
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter),
+                          ),
+                          child: CachedNetworkImage(
+                            imageUrl: "",
+                            imageBuilder: (context, imageProvider) => Image(
+                                image: imageProvider,
+                                // height: Get.height / 4,
+                                fit: BoxFit.fill),
+                            placeholder: (context, url) => loading(),
+                            errorWidget: (context, url, error) => const Icon(
+                              Icons.image_not_supported_outlined,
+                              color: AppColors.imageNotFoundColor,
+                              size: 50,
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              mainController.mostPopularMovieList[index].title!,
-                              style: Get.textTheme.headline2!.apply(
-                                color: AppColors.white.withAlpha(155),
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  mainController.mostPopularMovieList[index]
-                                      .imDbRatingCount!,
-                                  style: Get.textTheme.headline2!.apply(
-                                    color: AppColors.white.withAlpha(155),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                Icon(
-                                  Icons.remove_red_eye_outlined,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                mainController
+                                    .comingSoonMoviesList[index].title!,
+                                style: Get.textTheme.headline2!.apply(
                                   color: AppColors.white.withAlpha(155),
                                 ),
-                              ],
-                            ),
-                            RatingBarIndicator(
-                              rating: mainController.mostPopularMovieList[index]
-                                          .imDbRating! ==
-                                      ""
-                                  ? 0.0
-                                  : double.parse(mainController
-                                      .mostPopularMovieList[index].imDbRating!),
-                              itemBuilder: (context, index) => const Icon(
-                                Icons.star_rate_rounded,
-                                color: Colors.amber,
                               ),
-                              itemCount: 10,
-                              itemSize: 16.0,
-                              direction: Axis.horizontal,
-                            ),
-                          ],
+                              Text(
+                                mainController
+                                    .comingSoonMoviesList[index].releaseState!,
+                                style: Get.textTheme.headline2!.apply(
+                                  color: AppColors.white.withAlpha(155),
+                                ),
+                              ),
+                              Text(
+                                mainController
+                                    .comingSoonMoviesList[index].year!,
+                                style: Get.textTheme.headline2!.apply(
+                                  color: AppColors.white.withAlpha(155),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+                  );
+                }),
               ),
-            );
-          }),
-        ),
       ),
     );
   }

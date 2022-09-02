@@ -10,6 +10,8 @@ import 'package:get/get.dart';
 class MainController extends GetxController {
   //variable
   RxInt selectedNavBar = RxInt(0);
+  RxBool loadingMostPopular = RxBool(false);
+  RxBool loadingComingSoon = RxBool(false);
 
   //list
   RxList<MostPopularMovieModel> mostPopularMovieList = RxList();
@@ -28,10 +30,8 @@ class MainController extends GetxController {
   }
 
   getMostPopular() async {
+    loadingMostPopular.value = true;
     var responseMostPopular =
-        await DioService().getMethod(ApiConstan.getMostPopularMovies);
-
-    var responseComingSoon =
         await DioService().getMethod(ApiConstan.getMostPopularMovies);
 
     if (responseMostPopular.statusCode == 200) {
@@ -39,22 +39,19 @@ class MainController extends GetxController {
         mostPopularMovieList.add(MostPopularMovieModel.fromJson(element));
       });
     }
-
-    if (responseComingSoon.statusCode == 200) {
-      responseComingSoon.data['items'].forEach((element) {
-        mostPopularMovieList.add(MostPopularMovieModel.fromJson(element));
-      });
-    }
+    loadingMostPopular.value = false;
   }
 
   getComingSoon() async {
+    loadingComingSoon.value = true;
     var responseComingSoon =
-        await DioService().getMethod(ApiConstan.getMostPopularMovies);
+        await DioService().getMethod(ApiConstan.getComingSoonMovies);
 
     if (responseComingSoon.statusCode == 200) {
       responseComingSoon.data['items'].forEach((element) {
         comingSoonMoviesList.add(ComingSoonModel.fromJson(element));
       });
     }
+    loadingComingSoon.value = false;
   }
 }
