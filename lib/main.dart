@@ -1,11 +1,12 @@
 import 'package:app_movie_by_imdb_api/components/lanqueages.dart';
 import 'package:app_movie_by_imdb_api/components/theme.dart';
-import 'package:app_movie_by_imdb_api/views/main_screen.dart';
+import 'package:app_movie_by_imdb_api/views/Authentication/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import 'components/appcolors.dart';
+import 'views/main/main_screen.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
       translations: Languages(),
       locale: const Locale('en'),
       theme: Themes.appTheme,
-      home: MainScreen(),
+      home: LoginScreen(),
     );
   }
 }

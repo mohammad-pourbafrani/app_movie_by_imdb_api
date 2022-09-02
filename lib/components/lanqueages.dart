@@ -8,6 +8,10 @@ class Languages extends Translations {
           'most_popular': 'most popular Movies',
           'see_all': 'See All',
           'coming_soon': 'Coming Soon',
+          'user_name': 'User Name',
+          'password': 'Password',
+          'signup': 'Sign Up',
+          'login': 'Login',
         },
       };
 }
