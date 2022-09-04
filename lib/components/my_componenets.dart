@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 
 Widget loading() {
   return const SpinKitThreeBounce(
@@ -30,6 +31,29 @@ Widget costumiseInput(
       prefixIcon: Icon(
         icon,
         color: AppColors.white,
+      ),
+    ),
+  );
+}
+
+Widget costumiseElvatedButon(Callback callback, String text) {
+  return ElevatedButton(
+    style: ButtonStyle(
+      shape: MaterialStateProperty.all(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
+      backgroundColor: MaterialStateProperty.all(AppColors.backgrandNavColor),
+      padding: MaterialStateProperty.all(
+        const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
+      ),
+    ),
+    onPressed: callback,
+    child: Text(
+      text,
+      style: Get.textTheme.headline2!.apply(
+        color: AppColors.white.withAlpha(200),
       ),
     ),
   );

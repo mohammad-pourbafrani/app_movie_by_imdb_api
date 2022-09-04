@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
+import 'dart:convert' as convert;
 
 class DioService {
   Future<dynamic> getMethod(String url) async {
@@ -15,5 +18,44 @@ class DioService {
         .then((response) {
       return response;
     });
+  }
+
+  Future<Response> postMethod(String url, Map<String, dynamic> userData) async {
+    Dio dio = Dio();
+
+    try {
+      var response = await dio.post(
+        url,
+        data: userData,
+        options: Options(
+            contentType: "application/json",
+            method: "POST",
+            responseType: ResponseType.json),
+      );
+      return response;
+    } on DioError catch (e) {
+      return e.response!;
+    }
+  }
+
+  Future<dynamic> postLogIn(String url, Map<String, dynamic> userData) async {
+    Dio dio = Dio();
+
+    try {
+      FormData formData = FormData.fromMap(userData);
+      var response = await dio.post(
+        url,
+        data: formData,
+        options: Options(
+            headers: {"Content-Type": "multipart/form-data"},
+            contentType: "application/json",
+            method: "POST",
+            responseType: ResponseType.json),
+      );
+      print(response.toString());
+      return response;
+    } on DioError catch (e) {
+      return e.response;
+    }
   }
 }

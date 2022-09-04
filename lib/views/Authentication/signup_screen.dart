@@ -1,13 +1,14 @@
 import 'package:app_movie_by_imdb_api/components/appcolors.dart';
 import 'package:app_movie_by_imdb_api/components/my_componenets.dart';
 import 'package:app_movie_by_imdb_api/controllers/authentication_controller.dart';
+import 'package:app_movie_by_imdb_api/controllers/main_controller.dart';
 import 'package:app_movie_by_imdb_api/gen/assets.gen.dart';
-import 'package:app_movie_by_imdb_api/views/Authentication/signup_screen.dart';
+import 'package:app_movie_by_imdb_api/views/Authentication/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({Key? key}) : super(key: key);
+class SignUpScreen extends StatelessWidget {
+  SignUpScreen({Key? key}) : super(key: key);
   final AuthenticationController authenticationController =
       Get.put(AuthenticationController());
 
@@ -20,17 +21,57 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(
-                height: Get.height / 6,
+                height: Get.height / 8,
               ),
               //image login
               Image.asset(
-                Assets.images.login.path,
+                Assets.images.signUp.path,
                 // height: Get.height / 4,
                 // width: Get.width / 2,
                 scale: 3,
               ),
               const SizedBox(
                 height: 40,
+              ),
+              //email
+              Obx(
+                () => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TextField(
+                    controller: authenticationController.textEmailController,
+                    style: Get.textTheme.headline1!.apply(
+                      color: AppColors.white,
+                    ),
+                    onChanged: (value) {
+                      authenticationController.cheackEmail.value =
+                          GetUtils.isEmail(value);
+                    },
+                    decoration: InputDecoration(
+                      suffix: authenticationController.cheackEmail.value
+                          ? const Icon(
+                              Icons.check_rounded,
+                              color: Colors.green,
+                            )
+                          : const Icon(
+                              Icons.close_rounded,
+                              color: Colors.red,
+                            ),
+                      filled: true,
+                      fillColor: AppColors.backgrandNavColor,
+                      hintText: 'email'.tr,
+                      hintStyle: Get.textTheme.headline1!.apply(
+                        color: AppColors.white.withAlpha(100),
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.email_outlined,
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
               ),
               //user name
               Padding(
@@ -44,6 +85,7 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
+
               //password
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -53,7 +95,7 @@ class LoginScreen extends StatelessWidget {
                   icon: Icons.password_rounded,
                 ),
               ),
-              //sign up
+              //log in
               Row(
                 children: [
                   const SizedBox(
@@ -61,10 +103,10 @@ class LoginScreen extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      Get.to(() => SignUpScreen());
+                      Get.back();
                     },
                     child: Text(
-                      'signup'.tr,
+                      'login'.tr,
                       style: Get.textTheme.headline2!.apply(
                         color: AppColors.white.withAlpha(200),
                       ),
@@ -73,15 +115,15 @@ class LoginScreen extends StatelessWidget {
                   SizedBox(
                     width: Get.width / 4,
                   ),
-                  Obx(() => authenticationController.loadingLogIn.value
+                  Obx(() => authenticationController.loadingSignUp.value
                       ? loading()
                       : const SizedBox.shrink()),
                 ],
               ),
               // bottun log in
               costumiseElvatedButon(() {
-                authenticationController.logIn();
-              }, 'login'.tr)
+                authenticationController.register();
+              }, 'signup'.tr)
             ],
           ),
         ),

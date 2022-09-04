@@ -12,6 +12,8 @@ class Languages extends Translations {
           'password': 'Password',
           'signup': 'Sign Up',
           'login': 'Login',
+          'email': 'Email',
+          'checkEmail': 'Email is corect',
         },
       };
 }
