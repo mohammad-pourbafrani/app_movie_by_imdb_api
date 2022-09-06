@@ -14,6 +14,7 @@ class Languages extends Translations {
           'login': 'Login',
           'email': 'Email',
           'checkEmail': 'Email is corect',
+          'discover': 'Discover',
         },
       };
 }

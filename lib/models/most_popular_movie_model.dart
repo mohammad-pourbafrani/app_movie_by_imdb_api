@@ -1,38 +1,33 @@
 class MostPopularMovieModel {
-  String? id;
-  String? rank;
-  String? rankUpDown;
+  int? id;
   String? title;
-  String? fullTitle;
+  String? poster;
   String? year;
-  String? image;
-  String? crew;
-  String? imDbRating;
-  String? imDbRatingCount;
+  String? country;
+  String? imdbRating;
+  List<dynamic>? genres;
+  List<dynamic>? images;
 
   MostPopularMovieModel({
     required this.id,
-    required this.rank,
-    required this.rankUpDown,
     required this.title,
-    required this.fullTitle,
+    required this.poster,
     required this.year,
-    required this.image,
-    required this.crew,
-    required this.imDbRating,
-    required this.imDbRatingCount,
+    required this.country,
+    required this.imdbRating,
+    required this.genres,
+    required this.images,
   });
 
   MostPopularMovieModel.fromJson(Map<String, dynamic> element) {
     id = element["id"];
-    rank = element["rank"];
-    rankUpDown = element["rankUpDown"];
     title = element["title"];
-    fullTitle = element["fullTitle"];
+    poster = element["poster"];
     year = element["year"];
-    image = element["image"];
-    crew = element["crew"];
-    imDbRating = element["imDbRating"];
-    imDbRatingCount = element["imDbRatingCount"];
+    title = element["title"];
+    country = element["country"];
+    imdbRating = element["imdb_rating"];
+    genres = element["genres"];
+    images = element["images"];
   }
 }

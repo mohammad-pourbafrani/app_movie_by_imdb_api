@@ -77,70 +77,35 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(
             height: 8,
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                width: 10,
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Text(
+              'most_popular'.tr,
+              style: Get.textTheme.subtitle2!.apply(
+                color: AppColors.white,
               ),
-              Text(
-                'most_popular'.tr,
-                style: Get.textTheme.subtitle2!.apply(
-                  color: AppColors.white,
-                ),
-              ),
-              const Expanded(child: SizedBox()),
-              TextButton(
-                onPressed: () {},
-                child: Text(
-                  'see_all'.tr,
-                  style: Get.textTheme.headline2!.apply(
-                    color: AppColors.white.withAlpha(150),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                width: 10,
-              )
-            ],
+            ),
           ),
           const SizedBox(
-            height: 8,
+            height: 10,
           ),
           mostPopularMoviesList(),
           //new movie
           const SizedBox(
-            height: 8,
+            height: 10,
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                width: 10,
+
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Text(
+              'coming_soon'.tr,
+              style: Get.textTheme.subtitle2!.apply(
+                color: AppColors.white,
               ),
-              Text(
-                'coming_soon'.tr,
-                style: Get.textTheme.subtitle2!.apply(
-                  color: AppColors.white,
-                ),
-              ),
-              const Expanded(child: SizedBox()),
-              TextButton(
-                onPressed: () {},
-                child: Text(
-                  'see_all'.tr,
-                  style: Get.textTheme.headline2!.apply(
-                    color: AppColors.white.withAlpha(150),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                width: 10,
-              )
-            ],
+            ),
           ),
           const SizedBox(
-            height: 8,
+            height: 10,
           ),
           comingSoonMoviesList(),
           const SizedBox(
@@ -158,11 +123,10 @@ class HomeScreen extends StatelessWidget {
         () => mainController.loadingMostPopular.value
             ? loading()
             : ListView.builder(
+                controller: mainController.scrollControllerMostMovie,
                 physics: const BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
-                itemCount: mainController.mostPopularMovieList.length < 10
-                    ? mainController.mostPopularMovieList.length
-                    : 10,
+                itemCount: mainController.mostPopularMovieList.length,
                 itemBuilder: ((context, index) {
                   return Padding(
                     padding: const EdgeInsets.only(left: 10),
@@ -181,7 +145,7 @@ class HomeScreen extends StatelessWidget {
                             child: Center(
                               child: CachedNetworkImage(
                                 imageUrl: mainController
-                                    .mostPopularMovieList[index].image!,
+                                    .mostPopularMovieList[index].poster!,
                                 imageBuilder: (context, imageProvider) => Image(
                                     image: imageProvider,
                                     width: Get.width / 2.3,
@@ -207,38 +171,30 @@ class HomeScreen extends StatelessWidget {
                                   Text(
                                     mainController
                                         .mostPopularMovieList[index].title!,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
                                     style: Get.textTheme.headline2!.apply(
                                       color: AppColors.white.withAlpha(155),
                                     ),
                                   ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        mainController
-                                            .mostPopularMovieList[index]
-                                            .imDbRatingCount!,
-                                        style: Get.textTheme.headline2!.apply(
-                                          color: AppColors.white.withAlpha(155),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 8,
-                                      ),
-                                      Icon(
-                                        Icons.remove_red_eye_outlined,
-                                        color: AppColors.white.withAlpha(155),
-                                      ),
-                                    ],
+                                  Text(
+                                    mainController
+                                        .mostPopularMovieList[index].country!,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Get.textTheme.headline2!.apply(
+                                      color: AppColors.white.withAlpha(155),
+                                    ),
                                   ),
                                   RatingBarIndicator(
                                     rating: mainController
                                                 .mostPopularMovieList[index]
-                                                .imDbRating! ==
+                                                .imdbRating! ==
                                             ""
                                         ? 0.0
                                         : double.parse(mainController
                                             .mostPopularMovieList[index]
-                                            .imDbRating!),
+                                            .imdbRating!),
                                     itemBuilder: (context, index) => const Icon(
                                       Icons.star_rate_rounded,
                                       color: Colors.amber,
@@ -268,76 +224,75 @@ class HomeScreen extends StatelessWidget {
         () => mainController.loadingComingSoon.value
             ? loading()
             : ListView.builder(
+                controller: mainController.scrollControllerComingMovie,
                 physics: const BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
-                itemCount: mainController.comingSoonMoviesList.length < 10
-                    ? mainController.comingSoonMoviesList.length
-                    : 10,
+                itemCount: mainController.comingSoonMoviesList.length,
                 itemBuilder: ((context, index) {
                   return Padding(
                     padding: const EdgeInsets.only(left: 10),
-                    child: Stack(
-                      children: [
-                        Container(
-                          clipBehavior: Clip.hardEdge,
-                          width: Get.width / 1.5,
-                          height: Get.height / 4,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          foregroundDecoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            gradient: const LinearGradient(
-                                colors:
-                                    GradianetAppColors.gradianetComingSoonItem,
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter),
-                          ),
-                          child: CachedNetworkImage(
-                            imageUrl: "",
-                            imageBuilder: (context, imageProvider) => Image(
-                                image: imageProvider,
-                                // height: Get.height / 4,
-                                fit: BoxFit.fill),
-                            placeholder: (context, url) => loading(),
-                            errorWidget: (context, url, error) => const Icon(
-                              Icons.image_not_supported_outlined,
-                              color: AppColors.imageNotFoundColor,
-                              size: 50,
+                    child: Container(
+                      width: Get.width / 1.5,
+                      height: Get.height / 4,
+                      child: Stack(
+                        children: [
+                          Container(
+                            clipBehavior: Clip.hardEdge,
+                            width: Get.width / 1.5,
+                            height: Get.height / 4,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            foregroundDecoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              gradient: const LinearGradient(
+                                  colors: GradianetAppColors
+                                      .gradianetComingSoonItem,
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter),
+                            ),
+                            child: CachedNetworkImage(
+                              imageUrl: mainController
+                                  .comingSoonMoviesList[index].poster!,
+                              imageBuilder: (context, imageProvider) => Image(
+                                  image: imageProvider,
+                                  // height: Get.height / 4,
+                                  fit: BoxFit.fill),
+                              placeholder: (context, url) => loading(),
+                              errorWidget: (context, url, error) => const Icon(
+                                Icons.image_not_supported_outlined,
+                                color: AppColors.imageNotFoundColor,
+                                size: 50,
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                mainController
-                                    .comingSoonMoviesList[index].title!,
-                                style: Get.textTheme.headline2!.apply(
-                                  color: AppColors.white.withAlpha(155),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  mainController
+                                      .comingSoonMoviesList[index].title!,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Get.textTheme.headline2!.apply(
+                                    color: AppColors.white.withAlpha(200),
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                mainController
-                                    .comingSoonMoviesList[index].releaseState!,
-                                style: Get.textTheme.headline2!.apply(
-                                  color: AppColors.white.withAlpha(155),
+                                Text(
+                                  mainController
+                                      .comingSoonMoviesList[index].year!,
+                                  style: Get.textTheme.headline2!.apply(
+                                    color: AppColors.white.withAlpha(200),
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                mainController
-                                    .comingSoonMoviesList[index].year!,
-                                style: Get.textTheme.headline2!.apply(
-                                  color: AppColors.white.withAlpha(155),
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 }),

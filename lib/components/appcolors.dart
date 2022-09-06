@@ -14,7 +14,7 @@ class GradianetAppColors {
   //gradianet color
   static const gradianetComingSoonItem = [
     Color.fromARGB(5, 0, 0, 0),
-    Color.fromARGB(20, 0, 0, 0),
-    Color.fromARGB(200, 0, 0, 0),
+    Color.fromARGB(150, 0, 0, 0),
+    Color.fromARGB(250, 0, 0, 0),
   ];
 }

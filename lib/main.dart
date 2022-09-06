@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       translations: Languages(),
       locale: const Locale('en'),
       theme: Themes.appTheme,
-      home: LoginScreen(),
+      home: MainScreen(),
     );
   }
 }

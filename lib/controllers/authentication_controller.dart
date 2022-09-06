@@ -27,6 +27,9 @@ class AuthenticationController extends GetxController {
 
   //method
 
+  @override
+  InternalFinalCallback<void> get onDelete => super.onDelete;
+
   void clearEditeText() {
     textUserNameController.clear();
     textPasswordController.clear();
@@ -79,7 +82,8 @@ class AuthenticationController extends GetxController {
             key: 'access_token', value: response.data["access_token"]);
         await storage.write(
             key: 'refresh_token', value: response.data["refresh_token"]);
-        Get.to(() => MainScreen());
+        Get.delete<AuthenticationController>();
+        Get.off(() => MainScreen())?.then((value) => null);
       } else {
         clearEditeText();
         Get.snackbar("dont Log in", "no sucsessful");
