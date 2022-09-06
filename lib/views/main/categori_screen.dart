@@ -1,5 +1,7 @@
 import 'package:app_movie_by_imdb_api/components/appcolors.dart';
+import 'package:app_movie_by_imdb_api/components/my_componenets.dart';
 import 'package:app_movie_by_imdb_api/controllers/main_controller.dart';
+import 'package:app_movie_by_imdb_api/views/single_categori_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -46,42 +48,53 @@ class CtegoriScreen extends StatelessWidget {
 
   Widget category() {
     return Expanded(
-      child: ListView.builder(
-        physics: const BouncingScrollPhysics(),
-        scrollDirection: Axis.vertical,
-        itemCount: 15,
-        itemBuilder: ((context, index) {
-          return Padding(
-            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "categori$index",
-                      style: Get.textTheme.headline4!.apply(
-                        color: AppColors.white,
+      child: Obx(
+        () => mainController.loadingcategory.value
+            ? loading()
+            : ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                itemCount: mainController.categoryList.length,
+                itemBuilder: ((context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      mainController.getMovieCategory(
+                          mainController.categoryList[index].id!);
+                      Get.to(() => SinglCtegoriScreen());
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                mainController.categoryList[index].name!,
+                                style: Get.textTheme.headline3!.apply(
+                                  color: AppColors.white.withAlpha(200),
+                                ),
+                              ),
+                              Icon(
+                                Icons.keyboard_arrow_right_rounded,
+                                color: AppColors.white.withAlpha(200),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Divider(
+                            color: AppColors.white.withAlpha(150),
+                            indent: Get.width * 0.05,
+                            endIndent: Get.width * 0.05,
+                          ),
+                        ],
                       ),
                     ),
-                    const Icon(
-                      Icons.keyboard_arrow_right_rounded,
-                      color: AppColors.white,
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Divider(
-                  color: AppColors.white.withAlpha(150),
-                  indent: Get.width * 0.05,
-                  endIndent: Get.width * 0.05,
-                ),
-              ],
-            ),
-          );
-        }),
+                  );
+                }),
+              ),
       ),
     );
   }

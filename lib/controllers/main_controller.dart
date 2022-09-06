@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:app_movie_by_imdb_api/models/cooming_soon_model.dart';
+import 'package:app_movie_by_imdb_api/models/category_model.dart';
 import 'package:app_movie_by_imdb_api/models/most_popular_movie_model.dart';
 import 'package:app_movie_by_imdb_api/services/api_constan.dart';
 import 'package:app_movie_by_imdb_api/services/dio_service.dart';
@@ -12,14 +12,21 @@ class MainController extends GetxController {
   RxInt selectedNavBar = RxInt(0);
   RxBool loadingMostPopular = RxBool(false);
   RxBool loadingComingSoon = RxBool(false);
+  RxBool loadingcategory = RxBool(false);
+  RxBool loadingCategoryMovie = RxBool(false);
   RxMap<String, dynamic> dataPageMostPopular = RxMap();
   RxMap<String, dynamic> dataPageComingSoon = RxMap();
+  RxMap<String, dynamic> dataPageCategoryItem = RxMap();
+
   int pageMostPopular = 1;
   int pageComingSoon = 4;
+  int pageCategoryMovie = 1;
 
   //list
   RxList<MostPopularMovieModel> mostPopularMovieList = RxList();
   RxList<MostPopularMovieModel> comingSoonMoviesList = RxList();
+  RxList<CategoryModel> categoryList = RxList();
+  RxList<MostPopularMovieModel> categoryItemList = RxList();
 
   //controller
 
@@ -82,6 +89,7 @@ class MainController extends GetxController {
 
     getMostPopular();
     getComingSoon();
+    getCategory();
     super.onInit();
   }
 
@@ -117,5 +125,39 @@ class MainController extends GetxController {
       dataPageComingSoon.value = responseComingSoon.data['metadata'];
     }
     loadingComingSoon.value = false;
+  }
+
+  getCategory() async {
+    loadingcategory.value = true;
+    Map<String, dynamic> parametr = {};
+    var responsecategory =
+        await DioService().getMethod(ApiConstan.getCategoryMovies, parametr);
+
+    if (responsecategory.statusCode == 200) {
+      responsecategory.data.forEach((element) {
+        categoryList.add(CategoryModel.fromJson(element));
+      });
+    }
+    loadingcategory.value = false;
+  }
+
+  getMovieCategory(int id) async {
+    categoryItemList.clear();
+    loadingCategoryMovie.value = true;
+
+    Map<String, dynamic> parametr = {'page': pageCategoryMovie};
+    var responseItemCategory = await DioService()
+        .getMethod(ApiConstan().getItemCategory(id), parametr);
+
+    if (responseItemCategory.statusCode == 200) {
+      responseItemCategory.data['data'].forEach((element) {
+        categoryItemList.add(MostPopularMovieModel.fromJson(element));
+      });
+
+      dataPageCategoryItem.value = responseItemCategory.data['metadata'];
+    }
+
+    log(responseItemCategory.toString());
+    loadingCategoryMovie.value = false;
   }
 }

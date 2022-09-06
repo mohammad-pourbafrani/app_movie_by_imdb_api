@@ -1,5 +1,6 @@
 import 'package:app_movie_by_imdb_api/components/appcolors.dart';
 import 'package:app_movie_by_imdb_api/controllers/main_controller.dart';
+import 'package:app_movie_by_imdb_api/views/single_categori_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
