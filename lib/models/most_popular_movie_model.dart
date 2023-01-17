@@ -1,3 +1,5 @@
+import 'package:get/get.dart';
+
 class MostPopularMovieModel {
   int? id;
   String? title;
@@ -26,7 +28,15 @@ class MostPopularMovieModel {
     year = element["year"];
     title = element["title"];
     country = element["country"];
-    imdbRating = element["imdb_rating"];
+    if (element["imdb_rating"] == "") {
+      imdbRating = "0.0";
+    } else {
+      if (GetUtils.isNum(element["imdb_rating"])) {
+        imdbRating = element["imdb_rating"];
+      } else {
+        imdbRating = "0.0";
+      }
+    }
     genres = element["genres"];
     images = element["images"];
   }

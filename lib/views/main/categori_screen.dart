@@ -14,18 +14,9 @@ class CtegoriScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        //back icon
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Icon(
-            Icons.arrow_back_rounded,
-            color: AppColors.white,
-            size: 32,
-          ),
-        ),
         //header
         Padding(
-          padding: const EdgeInsets.only(left: 10),
+          padding: const EdgeInsets.only(left: 10, top: 15),
           child: Text(
             'discover'.tr,
             style: Get.textTheme.subtitle2!.apply(
@@ -56,8 +47,10 @@ class CtegoriScreen extends StatelessWidget {
                 scrollDirection: Axis.vertical,
                 itemCount: mainController.categoryList.length,
                 itemBuilder: ((context, index) {
-                  return GestureDetector(
+                  return InkWell(
                     onTap: () {
+                      mainController.idGenre =
+                          mainController.categoryList[index].id!;
                       mainController.getMovieCategory(
                           mainController.categoryList[index].id!);
                       Get.to(() => SinglCtegoriScreen());

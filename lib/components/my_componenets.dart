@@ -58,3 +58,14 @@ Widget costumiseElvatedButon(Callback callback, String text) {
     ),
   );
 }
+
+Widget costumiseRoundedContainer(Text text, Color colorBackgroand) {
+  return Container(
+    decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10), color: colorBackgroand),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Center(child: text),
+    ),
+  );
+}

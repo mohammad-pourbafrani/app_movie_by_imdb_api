@@ -1,5 +1,7 @@
 import 'package:app_movie_by_imdb_api/components/appcolors.dart';
 import 'package:app_movie_by_imdb_api/controllers/main_controller.dart';
+import 'package:app_movie_by_imdb_api/views/main/favorite_screen.dart';
+import 'package:app_movie_by_imdb_api/views/main/profile_screen.dart';
 import 'package:app_movie_by_imdb_api/views/single_categori_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,6 +18,7 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
             Positioned.fill(
@@ -25,6 +28,8 @@ class MainScreen extends StatelessWidget {
                   children: [
                     HomeScreen(),
                     CtegoriScreen(),
+                    FavoriteScreen(),
+                    ProfileScreen(),
                   ],
                 ),
               ),
@@ -35,12 +40,15 @@ class MainScreen extends StatelessWidget {
               bottom: 0,
               child: Container(
                 clipBehavior: Clip.hardEdge,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(32.0),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(32),
+                    topRight: Radius.circular(32),
+                  ),
                 ),
                 child: Obx(
                   () => WaterDropNavBar(
-                      bottomPadding: 16,
+                      bottomPadding: 20,
                       backgroundColor: AppColors.backgrandNavColor,
                       inactiveIconColor: AppColors.white,
                       waterDropColor: AppColors.white,

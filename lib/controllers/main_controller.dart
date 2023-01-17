@@ -2,37 +2,53 @@ import 'dart:developer';
 
 import 'package:app_movie_by_imdb_api/models/category_model.dart';
 import 'package:app_movie_by_imdb_api/models/most_popular_movie_model.dart';
+import 'package:app_movie_by_imdb_api/models/single_movie_model.dart';
 import 'package:app_movie_by_imdb_api/services/api_constan.dart';
 import 'package:app_movie_by_imdb_api/services/dio_service.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
 class MainController extends GetxController {
+  //storage
+  final storage = new FlutterSecureStorage();
+
   //variable
+  RxString userName = RxString("");
   RxInt selectedNavBar = RxInt(0);
   RxBool loadingMostPopular = RxBool(false);
   RxBool loadingComingSoon = RxBool(false);
   RxBool loadingcategory = RxBool(false);
   RxBool loadingCategoryMovie = RxBool(false);
+  RxBool loadingPageSingleMovie = RxBool(false);
+  RxBool loadingSearchBar = RxBool(false);
+  RxBool statusSearch = RxBool(true);
   RxMap<String, dynamic> dataPageMostPopular = RxMap();
   RxMap<String, dynamic> dataPageComingSoon = RxMap();
   RxMap<String, dynamic> dataPageCategoryItem = RxMap();
+  RxMap<String, dynamic> dataPageResultSearchItem = RxMap();
+  Rx<SingleMovieModel> singleMovie = SingleMovieModel().obs;
 
   int pageMostPopular = 1;
   int pageComingSoon = 4;
   int pageCategoryMovie = 1;
+  int pageResultSearchMovie = 1;
+  int idGenre = 0;
 
   //list
   RxList<MostPopularMovieModel> mostPopularMovieList = RxList();
   RxList<MostPopularMovieModel> comingSoonMoviesList = RxList();
   RxList<CategoryModel> categoryList = RxList();
   RxList<MostPopularMovieModel> categoryItemList = RxList();
+  RxList<MostPopularMovieModel> searchItemList = RxList();
+  RxList<SingleMovieModel> single = RxList();
 
   //controller
 
   TextEditingController textSearchController = TextEditingController();
   ScrollController? scrollControllerMostMovie;
   ScrollController? scrollControllerComingMovie;
+  ScrollController? scrollControllerCategory;
 
   //method
 
@@ -80,12 +96,45 @@ class MainController extends GetxController {
     }
   }
 
+  scrollListenerCategory() {
+    if (scrollControllerCategory!.offset >=
+            scrollControllerCategory!.position.maxScrollExtent &&
+        !scrollControllerCategory!.position.outOfRange) {
+      if (pageCategoryMovie < dataPageCategoryItem["page_count"]) {
+        categoryItemList.clear();
+        pageCategoryMovie++;
+
+        getMovieCategory(idGenre);
+      }
+    }
+    if (scrollControllerCategory!.offset <=
+            scrollControllerCategory!.position.minScrollExtent &&
+        !scrollControllerCategory!.position.outOfRange) {
+      if (pageCategoryMovie > 1) {
+        categoryItemList.clear();
+        pageCategoryMovie--;
+        getMovieCategory(idGenre);
+      }
+    }
+  }
+
   @override
-  onInit() {
+  onInit() async {
+    if (await storage.containsKey(key: "username").then((value) => value)) {
+      userName.value = await storage.read(key: "username").then((value) {
+        return value.toString();
+      });
+    } else {
+      await storage.write(key: "username", value: "guest");
+      userName.value = "guest";
+    }
+
     scrollControllerMostMovie = ScrollController();
     scrollControllerComingMovie = ScrollController();
+    scrollControllerCategory = ScrollController();
     scrollControllerComingMovie!.addListener(scrollListenerComingMovie);
     scrollControllerMostMovie!.addListener(scrollListenerMostMovie);
+    scrollControllerCategory!.addListener(scrollListenerCategory);
 
     getMostPopular();
     getComingSoon();
@@ -159,5 +208,40 @@ class MainController extends GetxController {
 
     log(responseItemCategory.toString());
     loadingCategoryMovie.value = false;
+  }
+
+  getSingleMovie(int id) async {
+    loadingPageSingleMovie.value = true;
+    Map<String, dynamic> parametr = {};
+    var responseSingleMovie =
+        await DioService().getMethod(ApiConstan().getSingleMovie(id), parametr);
+
+    if (responseSingleMovie.statusCode == 200) {
+      singleMovie.value = SingleMovieModel.fromJson(responseSingleMovie.data);
+    }
+
+    log(responseSingleMovie.toString());
+    log(singleMovie.value.awards.toString());
+    loadingPageSingleMovie.value = false;
+  }
+
+  getMovieSearchbar(String name) async {
+    searchItemList.clear();
+    loadingSearchBar.value = true;
+
+    Map<String, dynamic> parametr = {'q': name, 'page': pageResultSearchMovie};
+    var responseSearchBar =
+        await DioService().getMethod(ApiConstan.getResultSearch, parametr);
+
+    if (responseSearchBar.statusCode == 200) {
+      responseSearchBar.data['data'].forEach((element) {
+        searchItemList.add(MostPopularMovieModel.fromJson(element));
+      });
+
+      dataPageResultSearchItem.value = responseSearchBar.data['metadata'];
+    }
+
+    log(responseSearchBar.toString());
+    loadingSearchBar.value = false;
   }
 }

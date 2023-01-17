@@ -15,6 +15,11 @@ class Languages extends Translations {
           'email': 'Email',
           'checkEmail': 'Email is corect',
           'discover': 'Discover',
+          'plot_summery': 'Plot Summery',
+          'actors': 'Actors',
+          'awards': 'Awards',
+          'no_result': 'No results found',
+          'logout': 'Log out',
         },
       };
 }

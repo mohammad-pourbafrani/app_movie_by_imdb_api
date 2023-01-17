@@ -56,4 +56,22 @@ class DioService {
       return e.response;
     }
   }
+
+  Future<dynamic> postUserInfo(String url, String token) async {
+    Dio dio = Dio();
+    dio.options.headers['authorization'] = token;
+    try {
+      var response = await dio.post(
+        url,
+        options: Options(
+            // headers: {'authorization': token, "accept": "application/json"},
+            contentType: "application/json",
+            method: "POST",
+            responseType: ResponseType.json),
+      );
+      return response;
+    } on DioError catch (e) {
+      return e.response!;
+    }
+  }
 }

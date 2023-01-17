@@ -82,14 +82,59 @@ class AuthenticationController extends GetxController {
             key: 'access_token', value: response.data["access_token"]);
         await storage.write(
             key: 'refresh_token', value: response.data["refresh_token"]);
-        Get.delete<AuthenticationController>();
-        Get.off(() => MainScreen())?.then((value) => null);
+        log(response.toString());
+        getrRefreshToken();
+        getUserInfo();
+        // Get.delete<AuthenticationController>();
+        // Get.off(() => MainScreen())?.then((value) => null);
       } else {
         clearEditeText();
         Get.snackbar("dont Log in", "no sucsessful");
       }
     }
     loadingLogIn.value = false;
+  }
+
+  getUserInfo() async {
+    Map<String, dynamic> parametr = {
+      'authorization': await storage.read(key: "access_token").then((value) {
+        return "Bearer${value.toString()}";
+      })
+    };
+    print(await storage.read(key: "access_token").then((value) {
+      return "Bearer${value.toString()}";
+    }));
+    var responseUserInfo = await DioService().postUserInfo(
+        ApiConstan.getUserInfo,
+        await storage.read(key: "access_token").then((value) {
+          return "Bearer${value.toString()}";
+        }));
+    log(responseUserInfo.toString());
+    if (responseUserInfo.statusCode == 200) {
+      await storage.write(
+          key: 'username', value: responseUserInfo.data["name"]);
+      await storage.write(
+          key: 'email', value: responseUserInfo.data["access_token"]);
+    }
+    log(responseUserInfo.toString());
+  }
+
+  getrRefreshToken() async {
+    Map<String, dynamic> data = {
+      'grant_type': 'refresh_token',
+      'refresh_token': await storage.read(key: "refresh_token").then((value) {
+        return value.toString();
+      })
+    };
+
+    var responseUserInfo =
+        await DioService().postLogIn(ApiConstan.postUserInfoLogIn, data);
+    log(responseUserInfo.toString());
+    if (responseUserInfo.statusCode == 200) {
+      await storage.write(
+          key: 'access_token', value: responseUserInfo.data["access_token"]);
+    }
+    log(responseUserInfo.toString());
   }
 
   logOut() async {

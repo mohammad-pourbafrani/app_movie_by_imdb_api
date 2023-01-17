@@ -1,6 +1,7 @@
 import 'package:app_movie_by_imdb_api/components/lanqueages.dart';
 import 'package:app_movie_by_imdb_api/components/theme.dart';
 import 'package:app_movie_by_imdb_api/views/Authentication/login_screen.dart';
+import 'package:app_movie_by_imdb_api/views/single_movie_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
